@@ -22,6 +22,8 @@ const Graph = ({ vertices, edges }: GraphProps) => {
     const removedVertices = previousVertices.current.filter(
       (id) => !vertices.map((v) => v.id).includes(id)
     );
+    console.log(newVertices);
+    console.log(previousVertices.current);
 
     // Find new and removed edges
     const newEdges = edges
@@ -101,7 +103,6 @@ const Graph = ({ vertices, edges }: GraphProps) => {
           const toVertexVisible = visibleVertices.includes(edge.to);
           const shouldShowEdge = isNew ? visibleEdges.includes(edge.id) : true;
 
-          console.log("Edge:", edge.id, "Dashed:", edge.dashed);
 
           const createCurvedPath = (
             x1: number,
@@ -201,7 +202,7 @@ const Graph = ({ vertices, edges }: GraphProps) => {
       </AnimatePresence>
 
       {/* Render vertices */}
-      <AnimatePresence mode="wait">
+      <AnimatePresence>
         {vertices.map((vertex) => {
           const isNew = !previousVertices.current.includes(vertex.id);
 

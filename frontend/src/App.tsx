@@ -5,6 +5,8 @@ import { useState, useRef, useEffect } from "react";
 import { Menu, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { longestPathCycleProof } from "./proofs/longestPathCycle";
 import { fiveColorTheoremProof } from "./proofs/fiveColorTheorem";
+import { Proof } from "./types/graph";
+import GoogleLoginButton from "./components/GoogleLoginButton";
 
 function App() {
   const {
@@ -25,6 +27,7 @@ function App() {
   const [proofWidth, setProofWidth] = useState(400);
   const [isDragging, setIsDragging] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarWidth, setSidebarWidth] = useState(400);
 
   // Dragging refs
   const isResizing = useRef(false);
@@ -32,13 +35,16 @@ function App() {
   const startWidth = useRef(0);
 
   useEffect(() => {
-    const handleMouseMove = (e) => {
+    const handleMouseMove = (e: {
+      preventDefault: () => void;
+      clientX: number;
+    }) => {
       if (!isResizing.current) return;
 
       e.preventDefault();
       const deltaX = e.clientX - startX.current;
       const newWidth = Math.max(
-        250,
+        400,
         Math.min(800, startWidth.current + deltaX)
       );
       setProofWidth(newWidth);
@@ -64,7 +70,10 @@ function App() {
     };
   }, [isDragging]);
 
-  const handleMouseDown = (e) => {
+  const handleMouseDown = (e: {
+    preventDefault: () => void;
+    clientX: number;
+  }) => {
     e.preventDefault();
     isResizing.current = true;
     setIsDragging(true);
@@ -74,24 +83,32 @@ function App() {
     document.body.style.userSelect = "none";
   };
 
-  const handleProofSelect = (proof) => {
+  const handleProofSelect = (proof: Proof) => {
     setCurrentProof(proof);
     setSidebarOpen(false);
   };
 
   return (
-    <div className="flex h-screen bg-gray-50 relative">
+    <div className="flex h-screen bg-gray-900 relative">
+      {/* Login Button */}
+      <div className="absolute top-4 right-4 z-50">
+        <GoogleLoginButton />
+      </div>
+
       {/* Collapsible Proof Selection Sidebar */}
       <div
-        className={`fixed left-0 top-0 h-full bg-white shadow-lg z-50 transform transition-all duration-300 ${
+        className={`fixed left-0 top-0 h-full shadow-lg z-50 transform transition-all duration-300 ${
           sidebarOpen ? "w-[400px]" : "w-[65px]"
         }`}
-        style={{ backgroundColor: "#191817" }}
+        style={{
+          backgroundColor: "#1a1a1a",
+          width: sidebarOpen ? `${sidebarWidth}px` : "65px",
+        }}
       >
-        <div className="p-4 border-b border-gray-200 flex justify-end items-center">
+        <div className="p-4 border-b border-gray-700 flex justify-end items-center">
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="p-1 hover:bg-gray-100 rounded"
+            className="p-1 hover:bg-gray-700 rounded text-gray-300"
           >
             {sidebarOpen ? (
               <ChevronLeft className="w-5 h-5" />
@@ -112,15 +129,15 @@ function App() {
                 onClick={() => handleProofSelect(proof)}
                 className={`w-full text-left p-3 rounded-lg border flex items-center justify-between transition-colors ${
                   currentProof?.id === proof.id
-                    ? "bg-blue-50 border-blue-200 text-blue-800"
-                    : "bg-gray-50 border-gray-200 hover:bg-gray-100"
+                    ? "bg-blue-900 border-blue-700 text-blue-100"
+                    : "bg-gray-800 border-gray-700 hover:bg-gray-700 text-gray-200"
                 }`}
               >
                 <div className="flex items-center">
                   <input
                     type="checkbox"
                     className="mr-2"
-                    checked={Boolean(proof.completed)} // Convert to primitive boolean
+                    checked={Boolean(proof.completed)}
                     onChange={() => {
                       // logic to toggle completion status goes here
                     }}
@@ -136,74 +153,71 @@ function App() {
       {/* Menu Button */}
       <button
         onClick={() => setSidebarOpen(true)}
-        className="fixed top-4 left-4 z-40 p-2 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow"
+        className="fixed top-4 left-4 z-40 p-2 bg-gray-800 text-gray-200 rounded-lg shadow-md hover:bg-gray-700 transition-shadow"
       >
         <ChevronRight className="w-5 h-5" />
       </button>
 
       {/* Main Content */}
       <main
-        className={`p-8 flex items-center justify-center w-[100%] transition-all duration-300 ${
-          sidebarOpen ? "ml-[400px]" : "ml-[48px]"
-        }`}
+        className="p-8 items-center justify-center transition-all duration-300 w-full"
+        style={{
+          marginLeft: sidebarOpen ? `${sidebarWidth}px` : "65px",
+        }}
       >
-        <div className="h-[80vh] bg-white rounded-lg shadow-lg flex flex-row w-[95%] max-w-7xl">
+        <div className="h-full bg-gray-800 rounded-lg shadow-lg flex flex-row w-[95%] max-w-7xl overflow-hidden">
           {/* Proof Steps Panel */}
           <div
             style={{ width: `${proofWidth}px` }}
-            className={`h-full bg-white rounded-lg ${
+            className={`h-full bg-gray-800 rounded-lg ${
               isDragging ? "" : "transition-all duration-100 ease-in-out"
             }`}
           >
             <Sidebar />
           </div>
-          {/* Draggable Separator */}
 
+          {/* Draggable Separator */}
           <div
-            className="w-8 h-[98%] cursor-col-resize group flex items-center justify-center "
+            className="w-2 h-[80vh] cursor-col-resize group flex items-center justify-center bg-gray-700 hover:bg-blue-600 transition-colors"
             onMouseDown={handleMouseDown}
-            style={{ cursor: "col-resize", padding: "0.5rem" }}
-          ></div>
+            style={{ cursor: "col-resize", padding: "0.1rem" }}
+          />
 
           {/* Visualization Panel */}
-          <div
-            className="flex-1 h-full flex flex-col min-w-0 relative border-2 border-gray-200"
-            style={{ borderRadius: "0.5rem" }}
-          >
-            <div>
+          <div className="flex-1 h-[80vh] p-4 flex flex-col">
+            <div className="flex-1 bg-gray-900 rounded-lg">
               {/* Step Description Box */}
               {currentStep && (
-                <div className="p-4 bg-blue-50 border-b border-blue-100">
+                <div className="p-4 bg-gray-800 border-b border-gray-700 rounded-t-lg">
                   <div className="flex flex-col items-center text-center justify-between">
                     <div>
-                      <h4 className="font-medium text-blue-900">
+                      <h4 className="font-medium text-gray-100">
                         {currentStep.title}
                       </h4>
-                      <p className="text-sm text-blue-700 mt-1">
+                      <p className="text-sm text-gray-300 mt-1">
                         {currentStep.description}
                       </p>
                     </div>
                   </div>
                 </div>
               )}
-            </div>
-            {/* Graph Visualization */}
-            <div className="flex-1 p-4">
+
+              {/* Graph Visualization */}
               {currentStep ? (
                 <Graph
                   vertices={currentStep.graphState.vertices}
                   edges={currentStep.graphState.edges}
                 />
               ) : (
-                <div className="flex-1 flex items-center justify-center text-gray-500">
+                <div className="flex-1 flex items-center justify-center text-gray-400">
                   <div className="text-center">
-                    <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <div className="w-8 h-8 border-2 border-gray-300 rounded-full"></div>
+                    <div className="w-20 h-20 bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <div className="w-8 h-8 border-2 border-gray-600 rounded-full"></div>
                     </div>
-                    <p className="text-lg font-medium mb-2">
+                    <p className="text-lg font-medium mb-2 text-gray-200">
                       Graph Visualization
                     </p>
-                    <p className="text-sm">
+                    <p className="text-sm text-gray-400">
                       Select a proof to see the visualization
                     </p>
                   </div>
@@ -212,29 +226,42 @@ function App() {
             </div>
             <div
               className="bottom-4 right-4 flex flex-row gap-10"
-              style={{ position: "absolute", bottom: "1rem", right: "1rem" }}
+              style={{
+                position: "absolute",
+                bottom: "3.5rem",
+                right: "5.5rem",
+              }}
             >
               <button
-                className="flex items-center px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className={`p-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition-shadow ${
+                  !currentProof ||
+                  currentStepIndex === currentProof.steps.length - 1
+                    ? "opacity-50 cursor-not-allowed"
+                    : ""
+                }`}
                 onClick={nextStep}
                 disabled={
                   !currentProof ||
                   currentStepIndex === currentProof.steps.length - 1
                 }
               >
-                <ChevronRight className="w-4 h-4 ml-1" />
+                <ChevronRight className="w-5 h-5" />
               </button>
             </div>
             <div
               className="flex flex-row gap-10"
-              style={{ position: "absolute", bottom: "1rem", right: "6rem" }}
+              style={{ position: "absolute", bottom: "3.5rem", right: "8rem" }}
             >
               <button
-                className="flex items-center px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className={`p-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition-shadow ${
+                  !currentProof || currentStepIndex === 0
+                    ? "opacity-50 cursor-not-allowed"
+                    : ""
+                }`}
                 onClick={previousStep}
                 disabled={!currentProof || currentStepIndex === 0}
               >
-                <ChevronLeft className="w-4 h-4 ml-1" />
+                <ChevronLeft className="w-5 h-5" />
               </button>
             </div>
           </div>
