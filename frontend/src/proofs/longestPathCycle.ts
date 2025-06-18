@@ -1,7 +1,7 @@
 import { Proof } from "@/types/graph";
 
 export const longestPathCycleProof: Proof = {
-  id: "longest-path-cycle",
+  id: 1,
   title: "Longest Path and Cycle Theorem",
   description:
     "Every graph G contains a path of length δ(G) and a cycle of length at least δ(G) + 1 (provided that δ(G) ≥ 2).",

@@ -3,41 +3,54 @@ import { useState } from "react";
 interface LoginModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onLoginSuccess: (email: string, proofsCompleted: number[]) => void;
 }
 
-export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
+export default function LoginModal({
+  isOpen,
+  onClose,
+  onLoginSuccess,
+}: LoginModalProps) {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    setError(null);
 
     try {
-      const endpoint = isLogin ? "/login" : "/signup";
-      const response = await fetch(`http://localhost:8000${endpoint}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      if (!response.ok) {
-        throw new Error(isLogin ? "Login failed" : "Signup failed");
-      }
+      const response = await fetch(
+        `http://localhost:8000/${isLogin ? "login" : "signup"}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email, password }),
+        }
+      );
 
       const data = await response.json();
-      console.log(isLogin ? "Login successful:" : "Signup successful:", data);
-      alert(
-        isLogin ? "Successfully logged in!" : "Account created successfully!"
-      );
-      onClose();
+
+      if (response.ok) {
+        console.log("Login/Signup successful:", data);
+        localStorage.setItem("userEmail", data.user.email);
+        localStorage.setItem(
+          "completedProofs",
+          JSON.stringify(data.user.proofs_completed || [])
+        );
+        onLoginSuccess(data.user.email, data.user.proofs_completed || []);
+        onClose();
+      } else {
+        setError(data.error || (isLogin ? "Login failed" : "Signup failed"));
+      }
     } catch (error) {
       console.error("Error:", error);
-      alert(error instanceof Error ? error.message : "An error occurred");
+      setError("Network error. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -60,6 +73,12 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
           </button>
         </div>
 
+        {error && (
+          <div className="mb-4 p-3 bg-red-500 bg-opacity-20 border border-red-500 rounded text-red-200 text-sm">
+            {error}
+          </div>
+        )}
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label
@@ -73,7 +92,8 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Enter your email"
               required
             />
           </div>
@@ -90,7 +110,8 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Enter your password"
               required
             />
           </div>
@@ -106,7 +127,10 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
 
         <div className="mt-4 text-center">
           <button
-            onClick={() => setIsLogin(!isLogin)}
+            onClick={() => {
+              setIsLogin(!isLogin);
+              setError(null);
+            }}
             className="text-sm text-blue-400 hover:text-blue-300"
           >
             {isLogin

@@ -5,7 +5,7 @@ const centerY = 200;
 const radius = 95;
 
 export const fiveColorTheoremProof: Proof = {
-  id: "five-color-theorem",
+  id: 2,
   title: "Five Color Theorem",
   description:
     "Every planar graph can be colored with at most five colors so that no two adjacent vertices share the same color.",

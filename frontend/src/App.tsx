@@ -28,11 +28,97 @@ function App() {
   const [isDragging, setIsDragging] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarWidth, setSidebarWidth] = useState(400);
+  const [userEmail, setUserEmail] = useState<string | null>(null);
+  const [completedProofs, setCompletedProofs] = useState<number[]>([]);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   // Dragging refs
   const isResizing = useRef(false);
   const startX = useRef(0);
   const startWidth = useRef(0);
+
+  // Restore userEmail from localStorage on mount
+  useEffect(() => {
+    const storedEmail = localStorage.getItem("userEmail");
+    if (storedEmail) {
+      setUserEmail(storedEmail);
+    }
+  }, []);
+
+  // Load completed proofs when user logs in
+  useEffect(() => {
+    const loadCompletedProofs = async () => {
+      console.log("Current user email:", userEmail);
+      if (!userEmail) {
+        setCompletedProofs([]);
+        return;
+      }
+      // Just use the proofs_completed from the login response
+      // No need to make another API call
+      const storedProofs = localStorage.getItem("completedProofs");
+      console.log(storedProofs);
+      if (storedProofs) {
+        setCompletedProofs(JSON.parse(storedProofs));
+      }
+    };
+
+    loadCompletedProofs();
+  }, [userEmail]);
+
+  const handleLogin = (email: string, proofsCompleted: number[]) => {
+    setUserEmail(email);
+    setCompletedProofs(proofsCompleted || []);
+    setIsLoginModalOpen(false);
+  };
+
+  const handleProofToggle = (proofId: number) => {
+    if (!userEmail) {
+      alert("Please log in to mark proofs as completed");
+      return;
+    }
+
+    console.log("Current user email:", userEmail);
+    console.log("Current completed proofs:", completedProofs);
+    console.log("Toggling proof:", proofId);
+
+    const newCompletedProofs = completedProofs.includes(proofId)
+      ? completedProofs.filter((id) => id !== proofId)
+      : [...completedProofs, proofId];
+
+    console.log("New completed proofs:", newCompletedProofs);
+    setCompletedProofs(newCompletedProofs);
+
+    // Send update to backend
+    fetch("http://localhost:8000/update-proofs", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: userEmail,
+        proofs: newCompletedProofs,
+      }),
+    })
+      .then((response) => {
+        console.log("Response status:", response.status);
+        return response.json().then((data) => {
+          console.log("Response data:", data);
+          if (!response.ok) {
+            throw new Error(data.error || "Failed to update proofs");
+          }
+          localStorage.setItem(
+            "completedProofs",
+            JSON.stringify(data.proofs_completed)
+          );
+        });
+      })
+      .catch((error) => {
+        console.error("Error updating proofs:", error);
+        alert(error.message);
+        // Revert the checkbox state on error
+        setCompletedProofs(completedProofs);
+      });
+  };
 
   useEffect(() => {
     const handleMouseMove = (e: {
@@ -88,13 +174,16 @@ function App() {
     setSidebarOpen(false);
   };
 
+  // Add this logout handler
+  const handleLogout = () => {
+    localStorage.removeItem("userEmail");
+    localStorage.removeItem("completedProofs");
+    setUserEmail(null);
+    setCompletedProofs([]);
+  };
+
   return (
     <div className="flex h-screen bg-gray-900 relative">
-      {/* Login Button */}
-      <div className="absolute top-4 right-4 z-50">
-        <GoogleLoginButton />
-      </div>
-
       {/* Collapsible Proof Selection Sidebar */}
       <div
         className={`fixed left-0 top-0 h-full shadow-lg z-50 transform transition-all duration-300 ${
@@ -105,7 +194,11 @@ function App() {
           width: sidebarOpen ? `${sidebarWidth}px` : "65px",
         }}
       >
-        <div className="p-4 border-b border-gray-700 flex justify-end items-center">
+        <div
+          className={`p-4 border-b border-gray-700 flex items-center ${
+            sidebarOpen ? "flex-row-reverse justify-between" : "justify-end"
+          }`}
+        >
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
             className="p-1 hover:bg-gray-700 rounded text-gray-300"
@@ -116,6 +209,20 @@ function App() {
               <ChevronRight className="w-5 h-5" />
             )}
           </button>
+          {/* Login/Logout Buttons in Sidebar, only when expanded */}
+          {sidebarOpen && (
+            <div className="flex gap-2 mr-2">
+              {!userEmail && <GoogleLoginButton onLogin={handleLogin} />}
+              {userEmail && (
+                <button
+                  onClick={handleLogout}
+                  className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                >
+                  Logout
+                </button>
+              )}
+            </div>
+          )}
         </div>
         <div
           className={`${
@@ -137,9 +244,10 @@ function App() {
                   <input
                     type="checkbox"
                     className="mr-2"
-                    checked={Boolean(proof.completed)}
-                    onChange={() => {
-                      // logic to toggle completion status goes here
+                    checked={completedProofs.includes(proof.id)}
+                    onChange={(e) => {
+                      e.stopPropagation();
+                      handleProofToggle(proof.id);
                     }}
                   />
                   <span className="font-medium">{proof.title}</span>

@@ -11,7 +11,7 @@ var Supabase *supa.Client
 
 func InitSupabase() error {
 	supabaseUrl := os.Getenv("NEXT_PUBLIC_SUPABASE_URL")
-	supabaseKey := os.Getenv("NEXT_PUBLIC_SUPABASE_ANON_KEY")
+	supabaseKey := os.Getenv("SUPABASE_SERVICE_ROLE_KEY")
 
 	if supabaseUrl == "" || supabaseKey == "" {
 		return fmt.Errorf("missing Supabase credentials")

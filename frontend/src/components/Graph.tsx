@@ -12,6 +12,15 @@ const Graph = ({ vertices, edges }: GraphProps) => {
   const [visibleEdges, setVisibleEdges] = useState<string[]>([]);
   const previousVertices = useRef<string[]>([]);
   const previousEdges = useRef<string[]>([]);
+  const [userEmail, setUserEmail] = useState<string | null>(null);
+
+  useEffect(() => {
+    const storedEmail = localStorage.getItem("userEmail");
+    console.log("Initial user email from storage:", storedEmail);
+    if (storedEmail) {
+      setUserEmail(storedEmail);
+    }
+  }, []);
 
   useEffect(() => {
     // Find new and removed vertices
@@ -22,18 +31,14 @@ const Graph = ({ vertices, edges }: GraphProps) => {
     const removedVertices = previousVertices.current.filter(
       (id) => !vertices.map((v) => v.id).includes(id)
     );
-    console.log(newVertices);
-    console.log(previousVertices.current);
 
     // Find new and removed edges
     const newEdges = edges
       .map((e) => e.id)
       .filter((id) => !previousEdges.current.includes(id));
-    console.log(newEdges);
     const removedEdges = previousEdges.current.filter(
       (id) => !edges.map((e) => e.id).includes(id)
     );
-    console.log(removedEdges);
     // Handle removed elements with exit animations
     removedVertices.forEach((vertexId) => {
       setTimeout(() => {
@@ -88,6 +93,7 @@ const Graph = ({ vertices, edges }: GraphProps) => {
     });
   }, [vertices, edges]);
 
+
   return (
     <svg className="w-full h-full" viewBox="0 0 600 400">
       {/* Render edges */}
@@ -102,7 +108,6 @@ const Graph = ({ vertices, edges }: GraphProps) => {
           const fromVertexVisible = visibleVertices.includes(edge.from);
           const toVertexVisible = visibleVertices.includes(edge.to);
           const shouldShowEdge = isNew ? visibleEdges.includes(edge.id) : true;
-
 
           const createCurvedPath = (
             x1: number,

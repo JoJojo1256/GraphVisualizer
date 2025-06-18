@@ -1,19 +1,31 @@
 import { useState } from "react";
 import LoginModal from "./LoginModal";
 
-export default function GoogleLoginButton() {
+interface GoogleLoginButtonProps {
+  onLogin: (email: string, proofsCompleted: number[]) => void;
+}
+
+export default function GoogleLoginButton({ onLogin }: GoogleLoginButtonProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const handleLoginSuccess = (email: string, proofsCompleted: number[]) => {
+    onLogin(email, proofsCompleted);
+    setIsModalOpen(false);
+  };
+
   return (
-    <>
+    <div>
       <button
         onClick={() => setIsModalOpen(true)}
-        className="px-4 py-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition-colors"
+        className="flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
       >
         Login / Sign Up
       </button>
-
-      <LoginModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
-    </>
+      <LoginModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onLoginSuccess={handleLoginSuccess}
+      />
+    </div>
   );
 }

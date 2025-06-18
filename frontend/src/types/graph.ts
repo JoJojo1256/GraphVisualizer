@@ -30,7 +30,7 @@ export interface ProofStep {
 }
 
 export interface Proof {
-  id: string;
+  id: number;
   title: string;
   description: string;
   steps: ProofStep[];

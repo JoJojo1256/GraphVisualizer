@@ -14,7 +14,7 @@ const Sidebar = () => {
         style={{ borderRadius: "0.5rem" }}
       >
         {/* Proof Title Section */}
-        <div className="text-center">
+        <div className="text-center mt-10">
           <h3 className="text-3xl font-bold text-gray-100 mb-4">
             {currentProof.title}
           </h3>
@@ -36,7 +36,7 @@ const Sidebar = () => {
 
             {/* Proof content with border */}
             <div className="border border-gray-700 rounded-xl bg-gray-900 w-[95%] mx-auto">
-              <div className="w-[95%] mx-auto text-justify">
+              <div className="w-[95%] mx-auto text-justify m-5">
                 <p className="text-gray-300 mb-6 font-medium leading-relaxed">
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
                   do eiusmod tempor incididunt ut labore et dolore magna aliqua.
