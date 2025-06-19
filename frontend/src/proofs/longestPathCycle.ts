@@ -1,22 +1,24 @@
 import { Proof } from "@/types/graph";
-
 export const longestPathCycleProof: Proof = {
   id: 1,
   title: "Longest Path and Cycle Theorem",
   description:
     "Every graph G contains a path of length δ(G) and a cycle of length at least δ(G) + 1 (provided that δ(G) ≥ 2).",
+  full_proof:
+    "Let G be a graph with minimum degree δ(G) ≥ 2. Consider a longest path P = x₀, x₁, ..., xₖ in G. Since P is a longest path, xₖ has no neighbor outside of P; otherwise, the path could be extended, contradicting maximality. Let v be a neighbor of xₖ in G. Since δ(G) ≥ 2, xₖ must be connected to at least two vertices in P. Let v = xᵢ be the vertex on P with an edge to xₖ, where i < k. Then xᵢ, x_{i+1}, ..., xₖ, xᵢ forms a cycle. The length of this cycle is (k - i + 1) ≥ δ(G) + 1, because xₖ has at least δ(G) neighbors on the path, so the index i satisfies i ≤ k - δ(G). Thus, G contains a cycle of length at least δ(G) + 1. The path P itself has length k ≥ δ(G), since xₖ has δ(G) neighbors among x₀ to x_{k-1}.",
   steps: [
     {
-      title: "Choose vertex x₀ (an endpoint of the longest path)",
-      description: "We just have one vertex",
+      title: "Start with endpoint x₀",
+      description:
+        "Begin by placing vertex x₀, the starting point of a longest path.",
       graphState: {
         vertices: [{ id: "x0", label: "x₀", x: 100, y: 200 }],
         edges: [],
       },
     },
     {
-      title: "Initial Path",
-      description: "Start with a path from x₀ to xₖ",
+      title: "Build the longest path P",
+      description: "Construct a path P = x₀, x₁, ..., xₖ from x₀ to xₖ.",
       graphState: {
         vertices: [
           { id: "x0", label: "x₀", x: 100, y: 200 },
@@ -38,8 +40,8 @@ export const longestPathCycleProof: Proof = {
       },
     },
     {
-      title: "Highlight Endpoint",
-      description: "Highlight the endpoint xₖ",
+      title: "Highlight endpoint xₖ",
+      description: "Mark xₖ as the endpoint of the longest path P.",
       graphState: {
         vertices: [
           { id: "x0", label: "x₀", x: 100, y: 200 },
@@ -61,8 +63,9 @@ export const longestPathCycleProof: Proof = {
       },
     },
     {
-      title: "Introduce Vertex v",
-      description: "Introduce imaginary vertex v with dashed edge",
+      title: "Introduce possible neighbor v",
+      description:
+        "Add an imaginary vertex v to suggest a possible neighbor of xₖ.",
       graphState: {
         vertices: [
           { id: "x0", label: "x₀", x: 100, y: 200 },
@@ -86,8 +89,8 @@ export const longestPathCycleProof: Proof = {
       },
     },
     {
-      title: "Introduce Vertex v",
-      description: "Introduce imaginary vertex v with dashed edge",
+      title: "Back to longest path",
+      description: "Return to the longest path before connecting to v.",
       graphState: {
         vertices: [
           { id: "x0", label: "x₀", x: 100, y: 200 },
@@ -109,9 +112,9 @@ export const longestPathCycleProof: Proof = {
       },
     },
     {
-      title: "Show Edges to Earlier Vertices",
+      title: "xₖ connects to earlier vertices",
       description:
-        "Demonstrate that xₖ is connected to earlier vertices in the path",
+        "Show that xₖ connects back to earlier vertices in the path, enabling a cycle.",
       graphState: {
         vertices: [
           { id: "x0", label: "x₀", x: 100, y: 200 },
@@ -136,9 +139,9 @@ export const longestPathCycleProof: Proof = {
       },
     },
     {
-      title: "Cycle Making",
+      title: "Form the cycle",
       description:
-        "Demonstrate that xₖ is connected to earlier vertices in the path",
+        "Highlight the cycle formed by going from xᵢ to xₖ and back to xᵢ.",
       graphState: {
         vertices: [
           { id: "x0", label: "x₀", x: 100, y: 200 },

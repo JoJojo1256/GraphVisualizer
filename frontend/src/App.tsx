@@ -209,9 +209,9 @@ function App() {
               <ChevronRight className="w-5 h-5" />
             )}
           </button>
-          {/* Login/Logout Buttons in Sidebar, only when expanded */}
+          {/* Login/Logout Buttons and user email in Sidebar, only when expanded */}
           {sidebarOpen && (
-            <div className="flex gap-2 mr-2">
+            <div className="flex gap-2 mr-2 items-center">
               {!userEmail && <GoogleLoginButton onLogin={handleLogin} />}
               {userEmail && (
                 <button
@@ -220,6 +220,11 @@ function App() {
                 >
                   Logout
                 </button>
+              )}
+              {userEmail && (
+                <span className="border border-gray-600 rounded px-3 py-1 text-gray-300 bg-gray-800 ml-2">
+                  {userEmail}
+                </span>
               )}
             </div>
           )}

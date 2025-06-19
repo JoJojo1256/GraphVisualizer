@@ -33,6 +33,7 @@ export interface Proof {
   id: number;
   title: string;
   description: string;
+  full_proof: string;
   steps: ProofStep[];
   completed: Boolean;
 }

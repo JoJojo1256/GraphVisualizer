@@ -36,25 +36,33 @@ const Sidebar = () => {
 
             {/* Proof content with border */}
             <div className="border border-gray-700 rounded-xl bg-gray-900 w-[95%] mx-auto">
-              <div className="w-[95%] mx-auto text-justify m-5">
-                <p className="text-gray-300 mb-6 font-medium leading-relaxed">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                  Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                  laboris nisi ut aliquip ex ea commodo consequat.
-                </p>
-                <p className="text-gray-300 mb-6 font-medium leading-relaxed">
-                  Duis aute irure dolor in reprehenderit in voluptate velit esse
-                  cillum dolore eu fugiat nulla pariatur. Excepteur sint
-                  occaecat cupidatat non proident, sunt in culpa qui officia
-                  deserunt mollit anim id est laborum.
-                </p>
-                <p className="text-gray-300 mb-0 font-medium leading-relaxed">
-                  Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-                  accusantium doloremque laudantium, totam rem aperiam, eaque
-                  ipsa quae ab illo inventore veritatis et quasi architecto
-                  beatae vitae dicta sunt explicabo.
-                </p>
+              <div className="w-[95%] mx-auto text-justify ml-5 mr-5 my-5">
+                {currentProof.full_proof ? (
+                  <p className="text-gray-300 mb-0 font-medium leading-relaxed whitespace-pre-line">
+                    {currentProof.full_proof}
+                  </p>
+                ) : (
+                  <>
+                    <p className="text-gray-300 mb-6 font-medium leading-relaxed">
+                      Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                      Sed do eiusmod tempor incididunt ut labore et dolore magna
+                      aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+                      ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                    </p>
+                    <p className="text-gray-300 mb-6 font-medium leading-relaxed">
+                      Duis aute irure dolor in reprehenderit in voluptate velit
+                      esse cillum dolore eu fugiat nulla pariatur. Excepteur
+                      sint occaecat cupidatat non proident, sunt in culpa qui
+                      officia deserunt mollit anim id est laborum.
+                    </p>
+                    <p className="text-gray-300 mb-0 font-medium leading-relaxed">
+                      Sed ut perspiciatis unde omnis iste natus error sit
+                      voluptatem accusantium doloremque laudantium, totam rem
+                      aperiam, eaque ipsa quae ab illo inventore veritatis et
+                      quasi architecto beatae vitae dicta sunt explicabo.
+                    </p>
+                  </>
+                )}
               </div>
             </div>
           </div>

@@ -9,6 +9,9 @@ export const fiveColorTheoremProof: Proof = {
   title: "Five Color Theorem",
   description:
     "Every planar graph can be colored with at most five colors so that no two adjacent vertices share the same color.",
+  full_proof:
+    "The proof proceeds by induction on the number of vertices in a planar graph G. The base case is trivial. Assume every planar graph with fewer than n vertices can be properly colored using at most five colors.\n\nLet G have n vertices. By a well-known fact from planar graph theory, G must have a vertex v of degree at most 5. Remove v from G, obtaining G'. By the induction hypothesis, G' can be 5-colored.\n\nNow reinsert v. If v has fewer than 5 neighbors, there is always a color available from the 5-color set that isn't used by its neighbors — assign v that color.\n\nIf v has 5 neighbors, all with different colors, consider the neighbors arranged in a cyclic order around v. Try to recolor v by finding two neighbors with the same color or by performing a Kempe chain recoloring (swapping colors along connected components) to free up a color. In all cases, a valid coloring for G can be found using only five colors. Thus, by induction, every planar graph is 5-colorable.",
+
   completed: false, // 🔥 mark as incomplete initially
   steps: [
     {
@@ -166,7 +169,7 @@ export const fiveColorTheoremProof: Proof = {
       },
     },
     {
-      title: "Construct Kempe Chain from v1",
+      title: "Construct a Chain from v1",
       description:
         "Construct a chain of vertices starting from v1 that alternate between purple (v1's color) and red (v3's color).",
       graphState: {
@@ -228,7 +231,7 @@ export const fiveColorTheoremProof: Proof = {
     },
 
     {
-      title: "Construct Kempe Chain from v3",
+      title: "Construct a Chain from v3",
       description:
         "Construct a chain of vertices starting from v3 that alternate between red and purple.",
       graphState: {
@@ -384,7 +387,8 @@ export const fiveColorTheoremProof: Proof = {
 
     {
       title: "Found Valid Coloring of v in this case (purple)",
-      description: "TODO",
+      description:
+        "After switching the v1–v1b chain colors, the color 'purple' becomes available for v, which was previously unavailable due to conflicts. Assigning it completes the coloring.",
       graphState: {
         vertices: [
           { id: "v", label: "v", x: 300, y: 200, color: "purple" },
@@ -461,7 +465,8 @@ export const fiveColorTheoremProof: Proof = {
 
     {
       title: "Suppose v1 and v3 are connected",
-      description: "TODO",
+      description:
+        "Now suppose the v1–v1b and v3–v3b chains are connected. This prevents us from switching colors along the chain to free up a color, so we try a different Kempe chain or a different pair of colors.",
       graphState: {
         vertices: [
           { id: "v", label: "v", x: 300, y: 200 },
@@ -537,8 +542,9 @@ export const fiveColorTheoremProof: Proof = {
       },
     },
     {
-      title: "Let's make chains from 2",
-      description: "TODO",
+      title: "Explore Kempe Chain from v₂",
+      description:
+        "We examine the Kempe chain starting from v₂ (colored orange) to see if we can swap colors along this chain to free up orange for v.",
       graphState: {
         vertices: [
           { id: "v", label: "v", x: 300, y: 200 },
@@ -622,8 +628,9 @@ export const fiveColorTheoremProof: Proof = {
       },
     },
     {
-      title: "Let's make chains from 4",
-      description: "TODO",
+      title: "Explore Kempe Chain from v₄",
+      description:
+        "Now we consider the Kempe chain starting from v₄ (colored green). If it's not connected to v₂'s chain, we might be able to swap it to make green available for v.",
       graphState: {
         vertices: [
           { id: "v", label: "v", x: 300, y: 200 },
@@ -716,9 +723,9 @@ export const fiveColorTheoremProof: Proof = {
       },
     },
     {
-      title:
-        "4 and 2 cchains cannot be connected because that contradicts planarity",
-      description: "TODO",
+      title: "v₂ and v₄ Chains Must Be Disjoint",
+      description:
+        "If the Kempe chains from v₂ and v₄ were connected, it would imply a crossing in the planar graph — contradicting planarity. Therefore, the two chains must be disjoint.",
       graphState: {
         vertices: [
           { id: "v", label: "v", x: 300, y: 200 },
@@ -812,102 +819,9 @@ export const fiveColorTheoremProof: Proof = {
       },
     },
     {
-      title: "We can switch the colors of chain 4",
-      description: "TODO",
-      graphState: {
-        vertices: [
-          { id: "v", label: "v", x: 300, y: 200 },
-          {
-            id: "v1",
-            label: "1",
-            x: 300,
-            y: 100,
-            highlighted: true,
-            color: "purple",
-          },
-          { id: "v1a", label: "", x: 400, y: 60, color: "red" },
-          { id: "v1b", label: "", x: 500, y: 100, color: "purple" },
-          {
-            id: "v3a",
-            label: "",
-            x: 450,
-            y: 200 + 95 * Math.sin((3 * Math.PI) / 10) + 50,
-            color: "purple",
-          },
-          {
-            id: "v3b",
-            label: "",
-            x: 530,
-            y: 200 + 95 * Math.sin((3 * Math.PI) / 10) - 30,
-            color: "red",
-          },
-          {
-            id: "v2",
-            label: "2",
-            x: centerX + radius * Math.cos((18 * Math.PI) / 180),
-            y: centerY - radius * Math.sin((18 * Math.PI) / 180),
-            highlighted: true,
-            color: "orange",
-          },
-          {
-            id: "v2a",
-            label: "",
-            x: 450,
-            y: 200 + 95 * Math.sin((3 * Math.PI) / 10) - 30,
-            color: "green",
-          },
-          {
-            id: "v3",
-            label: "3",
-            x: centerX + radius * Math.cos((3 * Math.PI) / 10),
-            y: centerY + radius * Math.sin((3 * Math.PI) / 10),
-            highlighted: true,
-            color: "red",
-          },
-          {
-            id: "v4",
-            label: "4",
-            x: centerX + radius * Math.cos((234 * Math.PI) / 180),
-            y: centerY - radius * Math.sin((234 * Math.PI) / 180),
-            highlighted: true,
-            color: "green",
-          },
-          {
-            id: "v4a",
-            label: "",
-            x: 350,
-            y: 350,
-            highlighted: true,
-            color: "orange",
-          },
-          {
-            id: "v5",
-            label: "5",
-            x: centerX + radius * Math.cos((162 * Math.PI) / 180),
-            y: centerY - radius * Math.sin((162 * Math.PI) / 180),
-            highlighted: true,
-            color: "blue",
-          },
-        ],
-        edges: [
-          { id: "chain1-3", from: "v1b", to: "v3b" },
-          { id: "e1", from: "v", to: "v1" },
-          { id: "e3", from: "v", to: "v3" },
-          { id: "chain1a", from: "v1", to: "v1a" },
-          { id: "chain1b", from: "v1a", to: "v1b" },
-          { id: "chain3a", from: "v3", to: "v3a" },
-          { id: "chain3b", from: "v3a", to: "v3b" },
-          { id: "chain2a", from: "v2", to: "v2a" },
-          { id: "e2", from: "v", to: "v2" },
-          { id: "e4", from: "v", to: "v4" },
-          { id: "chain4a", from: "v4", to: "v4a" },
-          { id: "e5", from: "v", to: "v5" },
-        ],
-      },
-    },
-    {
-      title: "We can switch the colors of chain 4",
-      description: "TODO",
+      title: "Swap Colors in v₄'s Chain",
+      description:
+        "Since the v₄ and v₂ chains are disjoint, we can safely swap colors along the v₄ chain — freeing up green for v without affecting v₂'s color.",
       graphState: {
         vertices: [
           { id: "v", label: "v", x: 300, y: 200 },
@@ -1000,8 +914,105 @@ export const fiveColorTheoremProof: Proof = {
       },
     },
     {
-      title: "We found a valid coloring for v (green)",
-      description: "TODO",
+      title: "Assign Green to v",
+      description:
+        "After switching colors in v₄'s chain, the green color becomes available. We can now validly assign green to vertex v and complete the coloring.",
+      graphState: {
+        vertices: [
+          { id: "v", label: "v", x: 300, y: 200 },
+          {
+            id: "v1",
+            label: "1",
+            x: 300,
+            y: 100,
+            highlighted: true,
+            color: "purple",
+          },
+          { id: "v1a", label: "", x: 400, y: 60, color: "red" },
+          { id: "v1b", label: "", x: 500, y: 100, color: "purple" },
+          {
+            id: "v3a",
+            label: "",
+            x: 450,
+            y: 200 + 95 * Math.sin((3 * Math.PI) / 10) + 50,
+            color: "purple",
+          },
+          {
+            id: "v3b",
+            label: "",
+            x: 530,
+            y: 200 + 95 * Math.sin((3 * Math.PI) / 10) - 30,
+            color: "red",
+          },
+          {
+            id: "v2",
+            label: "2",
+            x: centerX + radius * Math.cos((18 * Math.PI) / 180),
+            y: centerY - radius * Math.sin((18 * Math.PI) / 180),
+            highlighted: true,
+            color: "orange",
+          },
+          {
+            id: "v2a",
+            label: "",
+            x: 450,
+            y: 200 + 95 * Math.sin((3 * Math.PI) / 10) - 30,
+            color: "green",
+          },
+          {
+            id: "v3",
+            label: "3",
+            x: centerX + radius * Math.cos((3 * Math.PI) / 10),
+            y: centerY + radius * Math.sin((3 * Math.PI) / 10),
+            highlighted: true,
+            color: "red",
+          },
+          {
+            id: "v4",
+            label: "4",
+            x: centerX + radius * Math.cos((234 * Math.PI) / 180),
+            y: centerY - radius * Math.sin((234 * Math.PI) / 180),
+            highlighted: true,
+            color: "orange",
+          },
+          {
+            id: "v4a",
+            label: "",
+            x: 350,
+            y: 350,
+            highlighted: true,
+            color: "green",
+          },
+          {
+            id: "v5",
+            label: "5",
+            x: centerX + radius * Math.cos((162 * Math.PI) / 180),
+            y: centerY - radius * Math.sin((162 * Math.PI) / 180),
+            highlighted: true,
+            color: "blue",
+          },
+        ],
+        edges: [
+          { id: "chain1-3", from: "v1b", to: "v3b" },
+          { id: "e1", from: "v", to: "v1" },
+          { id: "e3", from: "v", to: "v3" },
+          { id: "chain1a", from: "v1", to: "v1a" },
+          { id: "chain1b", from: "v1a", to: "v1b" },
+          { id: "chain3a", from: "v3", to: "v3a" },
+          { id: "chain3b", from: "v3a", to: "v3b" },
+          { id: "chain2a", from: "v2", to: "v2a" },
+          { id: "e2", from: "v", to: "v2" },
+          { id: "e4", from: "v", to: "v4" },
+          { id: "chain4a", from: "v4", to: "v4a" },
+          { id: "e5", from: "v", to: "v5" },
+        ],
+      },
+    },
+    {
+      title: "Assign Green to v",
+      description:
+        "After switching colors in v₄'s chain, the green color becomes available. We can now validly assign green to vertex v and complete the coloring.",
+
       graphState: {
         vertices: [
           { id: "v", label: "v", x: 300, y: 200, color: "green" },
