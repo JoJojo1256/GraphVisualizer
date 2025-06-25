@@ -16,6 +16,8 @@ function App() {
     previousStep,
     setCurrentProof,
   } = useProofStore();
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
 
   // For now, we'll use a hardcoded array of proofs
   // You can expand this as you add more proofs
@@ -89,7 +91,7 @@ function App() {
     setCompletedProofs(newCompletedProofs);
 
     // Send update to backend
-    fetch("http://localhost:8000/update-proofs", {
+    fetch(`${apiUrl}/update-proofs`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

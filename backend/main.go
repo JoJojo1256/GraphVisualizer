@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 
 	"graph-theory-visualization/lib"
@@ -48,7 +49,7 @@ func main() {
 
 	// Configure CORS
 	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:3000"},
+		AllowOrigins:     []string{"http://localhost:3000", "https://graph-visualizer-1uf6.vercel.app"},
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},
 		AllowCredentials: true,
@@ -406,15 +407,18 @@ func main() {
 
 	// --- Static file serving for frontend ---
 	// Serve static files from Next.js export (after running npm run export in frontend)
-	r.StaticFS("/", gin.Dir("../frontend/out", false))
+	r.StaticFS("/frontend", gin.Dir("../frontend/out", false))
 
 	// Fallback to index.html for client-side routing (SPA)
 	r.NoRoute(func(c *gin.Context) {
 		c.File("../frontend/out/index.html")
 	})
 
-	// Start server
-	if err := r.Run(":8000"); err != nil {
-		log.Fatal("Failed to start server:", err)
-	}
+	port := os.Getenv("PORT")
+  	if port == "" {
+      port = "8000" // fallback for local dev
+  	}
+  	if err := r.Run(":" + port); err != nil {
+  	    log.Fatal("Failed to start server:", err)
+  	}	
 } 

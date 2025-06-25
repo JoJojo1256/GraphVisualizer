@@ -16,6 +16,7 @@ export default function LoginModal({
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,7 +25,7 @@ export default function LoginModal({
 
     try {
       const response = await fetch(
-        `http://localhost:8000/${isLogin ? "login" : "signup"}`,
+        `${apiUrl}/${isLogin ? "login" : "signup"}`,
         {
           method: "POST",
           headers: {
