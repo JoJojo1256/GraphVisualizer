@@ -8,11 +8,12 @@ import (
 	"net/http"
 	"strings"
 
+	"graph-theory-visualization/lib"
+
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"golang.org/x/crypto/bcrypt"
-	"graph-theory-visualization/lib"
 )
 
 // HashPassword takes a plain text password and returns a bcrypt hash
@@ -401,6 +402,15 @@ func main() {
 			"message": "Proofs updated successfully",
 			"proofs":  proofIds,
 		})
+	})
+
+	// --- Static file serving for frontend ---
+	// Serve static files from Next.js export (after running npm run export in frontend)
+	r.StaticFS("/", gin.Dir("../frontend/out", false))
+
+	// Fallback to index.html for client-side routing (SPA)
+	r.NoRoute(func(c *gin.Context) {
+		c.File("../frontend/out/index.html")
 	})
 
 	// Start server
