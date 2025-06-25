@@ -18,7 +18,7 @@ function App() {
   } = useProofStore();
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
-
+  console.log(apiUrl);
   // For now, we'll use a hardcoded array of proofs
   // You can expand this as you add more proofs
   const availableProofs = [longestPathCycleProof, fiveColorTheoremProof];
