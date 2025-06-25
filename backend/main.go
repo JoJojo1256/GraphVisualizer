@@ -32,7 +32,7 @@ func CheckPasswordHash(password, hash string) bool {
 func main() {
 	// Load .env file
 	if err := godotenv.Load(); err != nil {
-		log.Fatal("Error loading .env file:", err)
+		log.Println("Warning: .env file not found, relying on environment variables")
 	}
 
 	// Initialize Supabase
