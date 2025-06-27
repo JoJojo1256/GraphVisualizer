@@ -1,54 +1,40 @@
-# React + TypeScript + Vite
+# Graph Theory Visualizer
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project is an interactive web application designed to help students and enthusiasts understand and visualize complex proofs in graph theory.
 
-Currently, two official plugins are available:
+## Purpose
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+I created this project because I had trouble understanding and visualizing many proofs in my graph theory class at Brown University. The goal is to make abstract concepts more accessible through interactive visualizations and step-by-step explanations.
 
-## Expanding the ESLint configuration
+## Tech Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **Frontend:** [Next.js](https://nextjs.org/) (React framework)
+- **Backend:** Go (Golang)
+- **Database & Auth:** [Supabase](https://supabase.com/) (PostgreSQL + Auth)
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+## Why Go for the Backend?
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+- **Performance:** Go is known for its speed and efficiency, making it ideal for handling concurrent requests.
+- **Learning:** I wanted to learn Go and experience its benefits firsthand.
+- **Simplicity:** Go's syntax and standard library make it easy to build robust APIs quickly.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Features
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+- **Interactive Graph Proof Visualizations:** Step through graph theory proofs visually.
+- **User Authentication:** Secure login and signup powered by Supabase and SQL.
+- **Password Security:** All passwords are hashed and never stored in plain text.
+
+## Security
+
+- Passwords are hashed using bcrypt before being stored in the database.
+- User authentication and session management are handled securely via Supabase.
+
+## Getting Started
+
+1. Clone the repo.
+2. Set up environment variables for Supabase and other secrets in a `.env` file (not included in the repo for security).
+3. Run the backend (Go) and frontend (Next.js) as described in their respective folders.
+
+---
+
+**This project is open source and welcomes contributions, especially from those interested in graph theory, education, or web development!**
