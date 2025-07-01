@@ -2,6 +2,10 @@
 
 This project is an interactive web application designed to help students and enthusiasts understand and visualize complex proofs in graph theory.
 
+## Try It Out
+
+You can try the live demo here: [https://graph-visualizer-1uf6.vercel.app/](https://graph-visualizer-1uf6.vercel.app/)
+
 ## Purpose
 
 I created this project because I had trouble understanding and visualizing many proofs in my graph theory class at Brown University. The goal is to make abstract concepts more accessible through interactive visualizations and step-by-step explanations.
